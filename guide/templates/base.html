@@ -6,7 +6,13 @@
     <title>{% block title %}Django School{% endblock %}</title>
     <link rel="icon" href="{% static 'img/favicon.png' %}">
     <link rel="stylesheet" href="https://getbootstrap.com/docs/5.1/dist/css/bootstrap.min.css">
-    <link href="https://getbootstrap.com/docs/5.1/examples/sidebars/sidebars.css" rel="stylesheet">
+    <link href="{% static 'sidebar.css' %}" rel="stylesheet">
+    <style>
+        ul.children {
+            padding-left: 12px;
+            width: auto;
+        }
+    </style>
     {% block css %}
     {% endblock %}
   </head>

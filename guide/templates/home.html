@@ -2,38 +2,40 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-4">
+  <div class="col-4">
     <h2>BRINGHEN</h2>
+
     <ul class="list-unstyled ps-0">
       <li class="mb-1">
-        <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+        <button class="btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
           Home
         </button>
         <div class="collapse show" id="home-collapse">
-          <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+          <ul class="btn-toggle-nav list-unstyled children">
             <li>
-                <a href="#" class="align-items-center link-dark rounded"  data-bs-toggle="collapse" data-bs-target="#ov-collapse">Overview</a>
-                
+                <button class="btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#ov-collapse">
+                    Sub menu
+                  </button>
                 <div class="collapse" id="ov-collapse">
-                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <ul class="btn-toggle-nav list-unstyled children">
                     <li>
-                        <a href="#" class="link-dark rounded">Overview</a>
+                        <a href="#" class="link-dark rounded">2 level menu</a>
                     </li>
-                    <li><a href="#" class="link-dark rounded">Updates</a></li>
-                    <li><a href="#" class="link-dark rounded">Reports</a></li>
-                </ul>
+                    <li><a href="#" class="link-dark rounded">Items</a></li>
+                  </ul>
                 </div>
             </li>
+
             <li><a href="#" class="link-dark rounded">Updates</a></li>
             <li><a href="#" class="link-dark rounded">Reports</a></li>
           </ul>
         </div>
       </li>
     </ul>
-    </div>
-    <div class="col-8">
-        </div>
   </div>
+  <div class="col-8">
+  </div>
+</div>
 {% endblock %}
 
 
