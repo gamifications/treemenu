@@ -11,6 +11,7 @@
     <a class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-parent="root" data-bs-parent-id="0">+ Add new root category</a>
     <ul class="list-unstyled">
         <li>
+
     {% for item, info in alist %}
         {% if info.open %}
         <ul class="btn-toggle-nav list-unstyled children">
@@ -26,6 +27,7 @@
         </div></li></ul>
         {% endfor %}
     {% endfor %}
+    
         </li>
     </ul>
     
@@ -67,12 +69,8 @@
   </div>
   <div class="col-8">
     <div class="m-4">
-    {% for message in messages %}
-    <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
-        {{ message }}
+      <pre>{{alist}}</pre>
     </div>
-    {% endfor %}
-</div>
   </div>
 </div>
 
