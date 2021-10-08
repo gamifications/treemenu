@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from guide.models import Category
 
 # Create your views here.
+@login_required
 def home(request):
     if request.method == 'POST':
         if request.POST.get('parent_id') and request.POST.get('category_name'):

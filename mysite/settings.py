@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
     'treebeard',
+
     'guide',
 ]
 
@@ -126,6 +128,8 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+AUTH_USER_MODEL = 'guide.User'
+
 from django.contrib.messages import constants as messages
 
 MESSAGE_TAGS = {
@@ -135,3 +139,5 @@ MESSAGE_TAGS = {
     messages.WARNING: 'alert-warning',
     messages.ERROR: 'alert-danger',
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
