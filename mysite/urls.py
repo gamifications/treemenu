@@ -19,5 +19,6 @@ from guide import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('profile/', views.Profile.as_view(), name='profile'),
     path('', views.home, name='home'),
 ]
