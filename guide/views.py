@@ -20,13 +20,12 @@ def home(request):
             if parent=='0':
                 Category.add_root(name=cat, user_type=request.user.user_type)
             else:
-                print(Category.objects.get(pk=parent))
-                Category.objects.get(pk=parent).add_child(name=cat, user_type=request.user.user_type)
+                Category.objects.get(pk=parent).add_child(name=cat, user_type=request.user.user_type) # .add_sibling(name='Hard Drives')
+                
             messages.success(request, f'Success: Category {cat} created successfully.')
         else:
             messages.error(request, 'Error: Category Name is required.')
         return redirect('home')
-    print(Category.get_annotated_list_qs(Category.objects.filter(name__icontains='category 2')))
     cat_list = Category.get_annotated_list_qs(Category.objects.filter(user_type=request.user.user_type))
     # cat_list = Category.get_annotated_list()
     return render(request,'home.html',{'alist': cat_list}) #[c for c in cat_list if c[0].user_type == request.user.user_type]})
