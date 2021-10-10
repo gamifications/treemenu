@@ -94,7 +94,7 @@
         <input type="hidden" name="articlepk" value="{{article_obj.pk}}">
         {% crispy form %}
       </form>
-      {% else %}
+      {% elif article_obj %}
       <h3 class="display-3">{{article_obj.title}}</h3><hr>
       {{article_obj.desc|safe}}
       <!-- <div class="card">

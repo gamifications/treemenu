@@ -27,4 +27,4 @@ urlpatterns = [
     path('<int:pk>/', views.home, name='article'),
     path('savearticle/', views.save_article, name='save_article'),
     path('ckeditor/', include('ckeditor_uploader.urls')),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
