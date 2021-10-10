@@ -8,7 +8,7 @@ from .models import Usertype, Category # , Article
 
 admin.site.unregister(Group)
 # admin.site.register(Article)
-# admin.site.register(Usertype)
+admin.site.register(Usertype)
 
 class CustUserAdmin(UserAdmin):
     search_fields = ('username', )

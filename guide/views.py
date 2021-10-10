@@ -3,14 +3,19 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import View
-
+from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from guide.models import Article, Category, Article, Usertype
 
+from django.forms import ModelForm
+class ArticleForm(ModelForm):
+    class Meta:
+        model = Article
+        fields = ['title', 'desc','id']
 # Create your views here.
 @login_required
-def home(request):
+def home(request, pk=None):
     user_type = request.user.user_type
     context = {}
     if request.user.is_superuser:
@@ -20,7 +25,10 @@ def home(request):
         user_type = context['user_types'].first()
         if 'user_type' in request.GET:
             user_type= Usertype.objects.get(id=request.GET['user_type'])
-
+    if pk:
+        context['article_obj'] = Article.objects.get(pk=pk)
+        if request.user.is_superuser:
+            context['form'] = ArticleForm(instance=context['article_obj'])
     if request.method == 'POST':
         # if not request.user.user_type:
         #     messages.error(request, 'Error: User is not associated with any usertypes.')
@@ -36,17 +44,27 @@ def home(request):
                     name=cat, user_type=user_type, is_category=is_cat)
                 
                 if not is_cat:
-                    Article.objects.create(category=obj)
+                    context['form'] = ArticleForm(instance=Article.objects.create(category=obj))
                 
             messages.success(request, f'Success: Category {cat} created successfully.')
         else:
             messages.error(request, 'Error: Name is required.')
         return redirect('home')
+    print('successs')
     context['user_type'] = user_type
     context['alist'] = Category.get_annotated_list_qs(Category.objects.filter(user_type=user_type))
     # cat_list = Category.get_annotated_list()
     return render(request,'home.html',context) #[c for c in cat_list if c[0].user_type == request.user.user_type]})
 
+@login_required
+def save_article(request):
+    print(request.POST)
+    obj = Article.objects.get(pk= request.POST['articlepk'])
+    obj.title = request.POST['title']
+    obj.desc = request.POST['desc']
+    obj.save()
+    messages.success(request, f'Success: Article updated successfully.')
+    return redirect(reverse('article', kwargs={"pk": obj.id})) #, args=(None,)) #,args=(1,))
 
 @method_decorator([login_required], name='dispatch')
 class Profile(View):

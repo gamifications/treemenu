@@ -1,3 +1,5 @@
 django-treebeard
 django
 django-crispy-forms
+
+#django-ckeditor

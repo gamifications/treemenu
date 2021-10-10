@@ -21,4 +21,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('profile/', views.Profile.as_view(), name='profile'),
     path('', views.home, name='home'),
+    path('<int:pk>/', views.home, name='article'),
+    path('savearticle/', views.save_article, name='save_article'),
+    
 ]

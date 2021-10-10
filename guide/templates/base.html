@@ -64,12 +64,15 @@
             <a class="navbar-brand" style="font-size: 2em; color:cornflowerblue" href="{% url 'home' %}"><strong>BRINGHEN</strong></a>
             {% if user.is_authenticated %}
             <ul class="navbar-nav navbar-nav-scroll ml-auto">
+              {% if user.is_superuser %}
               <li class="nav-item">
-                <a class="nav-link disabled">User Type: {{ user.user_type.name }}</a>
+                <a class="nav-link" href="/admin/guide/user/" style="font-size: 1.2em; color:cornflowerblue"">Users</a>
               </li>
+              {% endif %}
 
                 <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"  style="font-size: 1.2em; color:cornflowerblue">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" 
+                  aria-expanded="false" style="font-size: 1.2em; color:cornflowerblue">
                     {{user.username}} {{user.first_name}}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">

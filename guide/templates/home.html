@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load crispy_forms_tags %}
 {% block content %}
 
 <div class="row">
@@ -42,7 +42,7 @@
         {% if user.is_superuser %}<a class="btn btn-link" data-bs-toggle="modal" data-bs-target="#categoryModal" 
           data-bs-parent="{{item.name}}" data-bs-parent-id="{{item.id}}">+</a>{% endif %}
         {% else %} <!-- if article -->
-        <a href="#">{{item.name }}</a> 
+        <a href="{% url 'article' item.article.pk %}">{{item.name }}</a> 
         {% endif %}
         <div class="collapse" id="ov{{item.id}}-collapse">
         {% for close in info.close %}
@@ -87,6 +87,24 @@
   </div>
   <div class="col-8">
     <div class="m-4">
+      {% if form %}
+      <form method="post" action="{% url 'save_article' %}">
+        
+        <button class="btn btn-primary btn-lg" type="submit">+ Save Article</button>
+        <input type="hidden" name="articlepk" value="{{article_obj.pk}}">
+        {% crispy form %}
+      </form>
+      {% else %}
+      <div class="card">
+        <div class="card-header">
+          {{article_obj.title}}
+        </div>
+        <div class="card-body">
+          {{article_obj.desc|safe}}
+        </div>
+      </div>
+      
+      {% endif %}
     </div>
   </div>
 </div>
