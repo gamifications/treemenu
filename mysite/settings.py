@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'treebeard',
     'ckeditor',
+    'ckeditor_uploader',
 
     'guide',
 ]
@@ -146,3 +147,14 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'home'
 
 LOGOUT_REDIRECT_URL = 'home'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
+# CKEDITOR_CONFIGS = {
+#     'default': {
+#         'toolbar': 'Basic',
+#     },
+# }
+
+
+CKEDITOR_UPLOAD_PATH = "uploads/"

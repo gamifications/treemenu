@@ -95,14 +95,16 @@
         {% crispy form %}
       </form>
       {% else %}
-      <div class="card">
+      <h3 class="display-3">{{article_obj.title}}</h3><hr>
+      {{article_obj.desc|safe}}
+      <!-- <div class="card">
         <div class="card-header">
           {{article_obj.title}}
         </div>
         <div class="card-body">
           {{article_obj.desc|safe}}
         </div>
-      </div>
+      </div> -->
       
       {% endif %}
     </div>

@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.fields import BooleanField
 from treebeard.mp_tree import MP_Node
 from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     
@@ -24,7 +25,7 @@ class Usertype(models.Model):
 class Article(models.Model):
     category = models.OneToOneField('Category', on_delete=models.CASCADE)
     title = models.CharField(max_length=200, blank=True)
-    desc = RichTextField(blank=True)
+    desc = RichTextUploadingField(blank=True)
     def __str__(self):
         return f'{self.category.name}:{self.title}'
 
