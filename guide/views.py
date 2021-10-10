@@ -6,7 +6,7 @@ from django.views import View
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model
-from guide.models import Category
+from guide.models import Article, Category, Article
 
 # Create your views here.
 @login_required
@@ -17,10 +17,22 @@ def home(request):
         elif request.POST.get('parent_id') and request.POST.get('category_name'):
             parent = request.POST['parent_id']
             cat = request.POST['category_name']
+            cat_type = request.POST['cat_type']
+            # if cat_type == 'article':
+            #     obj = Category.objects.get(pk=parent)
+            #     article = Article.objects.create(name=cat)
+            #     obj.articles.add(article)
+            # el
             if parent=='0':
                 Category.add_root(name=cat, user_type=request.user.user_type)
             else:
-                Category.objects.get(pk=parent).add_child(name=cat, user_type=request.user.user_type) # .add_sibling(name='Hard Drives')
+                is_cat = False if cat_type == 'article' else True
+                obj = Category.objects.get(pk=parent).add_child(
+                    name=cat, user_type=request.user.user_type, is_category=is_cat)
+                
+                if not is_cat:
+                    Article.objects.create(category=obj)
+                print(obj)
                 
             messages.success(request, f'Success: Category {cat} created successfully.')
         else:

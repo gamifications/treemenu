@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 # Register your models here.
 
 from django.contrib.auth.admin import UserAdmin
-from .models import Usertype, Category
+from .models import Usertype, Category, Article
 class CustUserAdmin(UserAdmin):
     search_fields = ('username', )
     fieldsets = (
@@ -11,5 +11,14 @@ class CustUserAdmin(UserAdmin):
         )
 admin.site.register(get_user_model(), CustUserAdmin)
 
+class CategoryAdmin(admin.ModelAdmin):
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+admin.site.register(Article)
 admin.site.register(Usertype)
-admin.site.register(Category)
+admin.site.register(Category, CategoryAdmin)

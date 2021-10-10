@@ -8,7 +8,7 @@
 
     <input type="text" class="form-control" id="inputSuccess2"/>
     <br>
-    <a class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-parent="root" data-bs-parent-id="0">+ Add new root category</a>
+    <a class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#categoryModal" data-bs-parent="root" data-bs-parent-id="0">+ Add new root category</a>
     <ul class="list-unstyled">
         <li>
 
@@ -19,9 +19,13 @@
         {% else %}
             </div></li><li>
         {% endif %}
+        {% if item.is_category %}<!-- if category -->
         <button class="btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#ov{{item.id}}-collapse">
         {{ item.name }}
-        </button><a class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-parent="{{item.name}}" data-bs-parent-id="{{item.id}}">+</a>
+        </button><a class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#categoryModal" data-bs-parent="{{item.name}}" data-bs-parent-id="{{item.id}}">+</a>
+        {% else %} <!-- if article -->
+        <a href="#">{{item.name }}</a> 
+        {% endif %}
         <div class="collapse" id="ov{{item.id}}-collapse">
         {% for close in info.close %}
         </div></li></ul>
@@ -74,16 +78,28 @@
 </div>
 
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
 <div class="modal-dialog">
     <div class="modal-content">
     <form method="post" action="."> {% csrf_token %}
     <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Category</h5>
+        <h5 class="modal-title" id="categoryModalLabel">Add Category</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
     <div class="modal-body">
         <input type="hidden" id="parent-id" name="parent_id">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="cat_type" checked value="category">
+          <label class="form-check-label">
+            Category
+          </label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="cat_type" value="article">
+          <label class="form-check-label">
+            Article
+          </label>
+        </div>
         <div class="mb-3">
             <label for="message-text" class="col-form-label">Category Name:</label>
             <input class="form-control" id="cat-name" name="category_name">
@@ -102,17 +118,17 @@
 
 {% block js %}
 <script>
-let exampleModal = document.getElementById('exampleModal')
-exampleModal.addEventListener('show.bs.modal', function (event) {
+let categoryModal = document.getElementById('categoryModal')
+categoryModal.addEventListener('show.bs.modal', function (event) {
     let parent = event.relatedTarget.getAttribute('data-bs-parent');
     let parentid = event.relatedTarget.getAttribute('data-bs-parent-id');
-    let modalTitle = exampleModal.querySelector('.modal-title')
+    let modalTitle = categoryModal.querySelector('.modal-title')
     modalTitle.textContent = 'Add new category on ' + parent;
 
-    let modalBodyInputparent = exampleModal.querySelector('.modal-body input#parent-id');
+    let modalBodyInputparent = categoryModal.querySelector('.modal-body input#parent-id');
     modalBodyInputparent.value = parentid;
 
-    let modalBodyInput = exampleModal.querySelector('.modal-body input#cat-name');
+    let modalBodyInput = categoryModal.querySelector('.modal-body input#cat-name');
     modalBodyInput.value = "";
     
 })
