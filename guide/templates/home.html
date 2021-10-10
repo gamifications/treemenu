@@ -4,11 +4,27 @@
 
 <div class="row">
   <div class="col-4">
-   <div  style="background-color: #f5f5f5;" class="p-3">
+   <div  style="background-color: #f5f5f5; min-height: 600px;" class="d-flex flex-column p-3">
 
-    <input type="text" class="form-control" id="inputSuccess2"/>
+    <input type="text" class="form-control" placeholder="Search..."/>
     <br>
-    <a class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#categoryModal" data-bs-parent="root" data-bs-parent-id="0">+ Add new root category</a>
+    <h4> <span class="badge rounded-pill bg-info">{{ user_type.name }}</span></h4>
+    {% if user.is_superuser %}
+    <form method="GET" action=".">
+      <label>Select UserType:</label>
+      <select class="form-select" aria-label="Select User Type" name="user_type" onchange="this.form.submit()">
+        {% for utype in user_types %}
+        <option value="{{utype.id}}"{% if user_type.id == utype.id %} selected{%endif%}>{{utype.name}}</option>
+        {% endfor %}
+      </select>
+    </form>
+    
+    
+    <hr>
+    
+    <a class="btn btn-link" data-bs-toggle="modal" data-bs-target="#categoryModal" data-bs-parent="root" data-bs-parent-id="0">+ Add root category</a>
+    {% endif %}
+    
     <ul class="list-unstyled">
         <li>
 
@@ -22,7 +38,9 @@
         {% if item.is_category %}<!-- if category -->
         <button class="btn-toggle collapsed" data-bs-toggle="collapse" data-bs-target="#ov{{item.id}}-collapse">
         {{ item.name }}
-        </button><a class="btn btn-sm" data-bs-toggle="modal" data-bs-target="#categoryModal" data-bs-parent="{{item.name}}" data-bs-parent-id="{{item.id}}">+</a>
+        </button>
+        {% if user.is_superuser %}<a class="btn btn-link" data-bs-toggle="modal" data-bs-target="#categoryModal" 
+          data-bs-parent="{{item.name}}" data-bs-parent-id="{{item.id}}">+</a>{% endif %}
         {% else %} <!-- if article -->
         <a href="#">{{item.name }}</a> 
         {% endif %}
@@ -34,12 +52,8 @@
     
         </li>
     </ul>
+    <button class="btn btn-primary btn-lg mt-auto">Hey! Ask Me</button>
     
-    <br><br>
-    <div class="d-grid gap-2">
-        <button class="btn btn-primary btn-lg">Hey! Ask Me</button>
-      </div>
-
    </div>
     <!--
     <ul class="list-unstyled ps-0">
@@ -101,7 +115,7 @@
           </label>
         </div>
         <div class="mb-3">
-            <label for="message-text" class="col-form-label">Category Name:</label>
+            <label for="message-text" class="col-form-label">Name:</label>
             <input class="form-control" id="cat-name" name="category_name">
         </div>
     </div>
