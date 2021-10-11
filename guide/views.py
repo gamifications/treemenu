@@ -70,18 +70,12 @@ def home(request, pk=None):
 class Home(View):
     def get(self, request, articlepk=None):
         context = {}
-        
-
         if request.user.is_superuser:
             # we need all user_types to show it in the dropdown
             context['user_types'] = Usertype.objects.all()
             if 'user_type' in request.GET:
                 context['user_type'] = Usertype.objects.get(id=request.GET['user_type'])
             else:
-                # if articlepk:
-                #     # if article, set user_type as article's user_type
-                #     context['user_type'] = 
-                # else:
                 context['user_type'] = context['user_types'].first()
         else:
             # if not an admin user user_type is current users user_type

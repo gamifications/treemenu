@@ -10,7 +10,7 @@
     <br>
     <h4> <span class="badge rounded-pill bg-info">{{ user_type.name }}</span></h4>
     {% if user.is_superuser %}
-      <form method="GET" action=".">
+      <form method="GET" action="{% url 'home' %}">
         <label>Select UserType:</label>
         <select class="form-select" aria-label="Select User Type" name="user_type" onchange="this.form.submit()">
           {% for utype in user_types %}
@@ -59,10 +59,19 @@
   </div>
   <div class="col-8">
     <div class="m-4">
+      <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          {% for cat in article_obj.category.get_ancestors %}
+            <li class="breadcrumb-item active" aria-current="page">{{cat.name}}</li>
+          {% endfor %}
+          
+          <li class="breadcrumb-item active" aria-current="page">{{article_obj.category.name}}</li>
+        </ol>
+      </nav>
       {% if form %}
         <form method="post" action="{% url 'save_article' %}">
           
-          <button class="btn btn-primary btn-lg" type="submit">+ Save Article</button>
+          <button class="btn btn-primary btn-sm" type="submit">+ Save Article</button><hr>
           <input type="hidden" name="articlepk" value="{{article_obj.pk}}">
           {% crispy form %}
         </form>
