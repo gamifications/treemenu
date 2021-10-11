@@ -41,7 +41,7 @@
         </button>
         {% if user.is_superuser %}<a class="btn btn-link" data-bs-toggle="modal" data-bs-target="#categoryModal" 
           data-bs-parent="{{item.name}}" data-bs-parent-id="{{item.id}}">+</a>{% endif %}
-        {% else %} <!-- if article -->
+        {% elif item.article %} <!-- if article -->
         <a href="{% url 'article' item.article.pk %}">{{item.name }}</a> 
         {% endif %}
         <div class="collapse" id="ov{{item.id}}-collapse">

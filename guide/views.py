@@ -25,11 +25,13 @@ def home(request, pk=None):
         user_type = context['user_types'].first()
         if 'user_type' in request.GET:
             user_type= Usertype.objects.get(id=request.GET['user_type'])
+            print('usertype', user_type)
     if pk:
         context['article_obj'] = Article.objects.get(pk=pk)
         if request.user.is_superuser:
             context['form'] = ArticleForm(instance=context['article_obj'])
     if request.method == 'POST':
+        print(user_type)
         # if not request.user.user_type:
         #     messages.error(request, 'Error: User is not associated with any usertypes.')
         if request.POST.get('parent_id') and request.POST.get('category_name'):
