@@ -13,54 +13,119 @@ class ArticleForm(ModelForm):
     class Meta:
         model = Article
         fields = ['title', 'desc','id']
+
+
 # Create your views here.
 @login_required
 def home(request, pk=None):
-    user_type = request.user.user_type
-    context = {}
-    if request.user.is_superuser:
-        # print('super user')
-        
-        context['user_types'] = Usertype.objects.all()
-        user_type = context['user_types'].first()
-        if 'user_type' in request.GET:
-            user_type= Usertype.objects.get(id=request.GET['user_type'])
-            print('usertype', user_type)
-    if pk:
-        context['article_obj'] = Article.objects.get(pk=pk)
-        if request.user.is_superuser:
-            context['form'] = ArticleForm(instance=context['article_obj'])
+            
     if request.method == 'POST':
-        print(user_type)
-        # if not request.user.user_type:
-        #     messages.error(request, 'Error: User is not associated with any usertypes.')
         if request.POST.get('parent_id') and request.POST.get('category_name'):
+            # we take usertype from hidden input field
+            user_type = Usertype.objects.get(id=request.POST['user_type'])
             parent = request.POST['parent_id']
             cat = request.POST['category_name']
             is_cat = False if request.POST['cat_type'] == 'article' else True
             if parent=='0':
+                # if root category.
+                # root category can be category or article
                 Category.add_root(name=cat, user_type=user_type, is_category=is_cat)
             else:
-                
                 obj = Category.objects.get(pk=parent).add_child(
                     name=cat, user_type=user_type, is_category=is_cat)
-                
                 if not is_cat:
-                    context['form'] = ArticleForm(instance=Article.objects.create(category=obj))
+                    # create an empty article under category
+                    Article.objects.create(category=obj)
+                    # context['form'] = ArticleForm(instance=Article.objects.create(category=obj))
                 
             messages.success(request, f'Success: Category {cat} created successfully.')
         else:
             messages.error(request, 'Error: Name is required.')
         return redirect('home')
-    print('successs')
-    context['user_type'] = user_type
-    context['alist'] = Category.get_annotated_list_qs(Category.objects.filter(user_type=user_type))
-    # cat_list = Category.get_annotated_list()
-    return render(request,'home.html',context) #[c for c in cat_list if c[0].user_type == request.user.user_type]})
+
+
+    context = {}
+    if pk:
+        # if article
+        context['article_obj'] = Article.objects.get(pk=pk)
+        if request.user.is_superuser: context['form'] = ArticleForm(instance=context['article_obj'])
+
+    if request.user.is_superuser:
+        # we need all user_types to show it in the dropdown
+        context['user_types'] = Usertype.objects.all()
+        if 'user_type' in request.GET:
+            context['user_type'] = Usertype.objects.get(id=request.GET['user_type'])
+        else:
+            context['user_type'] = context['user_types'].first()
+    else:
+        # if not an admin user user_type is current users user_type
+        context['user_type'] = request.user.user_type
+    
+    # get all categories for a user_type
+    context['alist'] = Category.get_annotated_list_qs(Category.objects.filter(user_type=context['user_type']))
+    return render(request,'home.html',context)
+
+
+@method_decorator([login_required], name='dispatch')
+class Home(View):
+    def get(self, request, articlepk=None):
+        context = {}
+        
+
+        if request.user.is_superuser:
+            # we need all user_types to show it in the dropdown
+            context['user_types'] = Usertype.objects.all()
+            if 'user_type' in request.GET:
+                context['user_type'] = Usertype.objects.get(id=request.GET['user_type'])
+            else:
+                # if articlepk:
+                #     # if article, set user_type as article's user_type
+                #     context['user_type'] = 
+                # else:
+                context['user_type'] = context['user_types'].first()
+        else:
+            # if not an admin user user_type is current users user_type
+            context['user_type'] = request.user.user_type
+        
+        if articlepk:
+            # if article
+            context['article_obj'] = Article.objects.get(pk=articlepk)
+            if request.user.is_superuser: 
+                context['form'] = ArticleForm(instance=context['article_obj'])
+
+                # if article, set user_type as article's user_type
+                context['user_type'] = context['article_obj'].category.user_type
+        
+        # get all categories for a user_type
+        context['alist'] = Category.get_annotated_list_qs(Category.objects.filter(user_type=context['user_type']))
+        return render(request,'home.html',context)
+
+    def post(self,request):
+        """Create New Category"""
+
+        # we take usertype from hidden input field
+        user_type = Usertype.objects.get(id=request.POST['user_type'])
+        if request.POST.get('parent_id') and request.POST.get('category_name'):
+            parent = request.POST['parent_id']
+            cat = request.POST['category_name']
+            is_cat = False if request.POST['cat_type'] == 'article' else True
+            if parent=='0':
+                # if root category.
+                # root category can be category or article
+                Category.add_root(name=cat, user_type=user_type, is_category=is_cat)
+            else:
+                obj = Category.objects.get(pk=parent).add_child(
+                    name=cat, user_type=user_type, is_category=is_cat)
+                if not is_cat:
+                    # create an empty article under category
+                    Article.objects.create(category=obj)
+            messages.success(request, f'Success: Category {cat} created successfully.')
+        else:
+            messages.error(request, 'Error: Name is required.')
+        return redirect(f"{reverse('home')}?user_type={user_type.pk}")
 
 @login_required
 def save_article(request):
-    print(request.POST)
     obj = Article.objects.get(pk= request.POST['articlepk'])
     obj.title = request.POST['title']
     obj.desc = request.POST['desc']
